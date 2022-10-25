@@ -75,7 +75,9 @@ export default function Home() {
         const vx = vintage.setApprovalForAll(STAKE_CONTRACT_ADDRESS, true);
         setLoading(true);
         await vx.await();
+        setLoading(false);
         const tx = await stakeContract.stake(enterId);
+        setLoading(true);
         await tx.wait();
         setLoading(false);
         nfts_container();
@@ -83,6 +85,7 @@ export default function Home() {
 
     } catch (err) {
       console.error(err);
+      setLoading(false);
     }
 
   }
