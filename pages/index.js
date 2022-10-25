@@ -225,7 +225,7 @@ export default function Home() {
             return (
               <div className={styles.card} key={keyi}>
                 <div className={styles.card_image}> <Image src={`https://ipfs.io/ipfs/${srcpath[2]}/${srcpath[3]}`} width={'270px'} height='180px' alt="nft image" /></div>
-                <div className={styles.card_title}></div>
+                <div className={styles.card_title}>{stkn["data"]["name"]}</div>
                 <button onClick={(e) => { withdraw(e) }} name={"nft#" + Math.round(parseFloat(stkn["tokenId"]) * (10 ** 18))}>{loading ? "Loading ..." : "Withdraw"}</button>
               </div>
             )
