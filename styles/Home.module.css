@@ -92,6 +92,17 @@
   flex-direction: row;
   padding-bottom: 70px;
 }
+.stakeForm{
+  margin-top: 0px;
+  min-width: 200px;
+  padding: 0px 20px 60px;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.claimrwrds{
+  width: 300px;
+}
 .container::-webkit-scrollbar{
   display: none;
 }
@@ -100,6 +111,7 @@
   margin: 10px;
 }
 .card_image{
+  position:relative;
   height: 300px;
   width: 300px;
   border-radius: 20px;
