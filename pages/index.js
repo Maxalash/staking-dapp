@@ -58,13 +58,27 @@ export default function Home() {
   const stakeNFT = async (event) => {
     try {
       event.preventDefault();
+
       const signer = await getProviderOrSigner(true);
       const stakeContract = new Contract(STAKE_CONTRACT_ADDRESS, stake_abi, signer);
-      const tx = await stakeContract.stake(enterId);
-      setLoading(true);
-      await tx.wait();
-      setLoading(false);
-      nfts_container();
+      const vintage = new Contract(NFT_ADDRESS, nft_abi, signer);
+      const addr = await signer.getAddress();
+      const approved = vintage.isApprovedForAll(addr, STAKE_CONTRACT_ADDRESS);
+      if (approved) {
+        const tx = await stakeContract.stake(enterId);
+        setLoading(true);
+        await tx.wait();
+        setLoading(false);
+        nfts_container();
+      } else {
+        const vx = vintage.setApprovalForAll(STAKE_CONTRACT_ADDRESS, true);
+        setLoading(true);
+        await vx.await();
+        const tx = await stakeContract.stake(enterId);
+        await tx.wait();
+        setLoading(false);
+        nfts_container();
+      }
 
     } catch (err) {
       console.error(err);
@@ -88,7 +102,7 @@ export default function Home() {
       console.error(err);
     }
   }
-  
+
   const claimRewards = async (event) => {
     try {
       event.preventDefault;
@@ -106,7 +120,7 @@ export default function Home() {
     }
   }
 
-  const getRewards = async () =>{
+  const getRewards = async () => {
     try {
       // event.preventDefault();
       const signer = await getProviderOrSigner(true);
@@ -124,10 +138,10 @@ export default function Home() {
     try {
       // event.preventDefault();
       const nftdata = [];
-      const provider = await getProviderOrSigner(true);
-      const addr = await provider.getAddress();
-      const stakeContract = new Contract(STAKE_CONTRACT_ADDRESS, stake_abi, provider);
-      const vintage = new Contract(NFT_ADDRESS, nft_abi, provider);
+      const signer = await getProviderOrSigner(true);
+      const addr = await signer.getAddress();
+      const stakeContract = new Contract(STAKE_CONTRACT_ADDRESS, stake_abi, signer);
+      const vintage = new Contract(NFT_ADDRESS, nft_abi, signer);
       const nfts1 = await stakeContract.getStakedTokens(addr);
       const result = nfts1.map(nf => { return utils.formatEther(nf[1]) });
       nfts1.forEach(async element => {
@@ -175,7 +189,7 @@ export default function Home() {
       return (
         <form className={`${styles.container} ${styles.stakeForm}`}>
           <input type="number" value={enterId} onChange={(event) => { event.preventDefault; const data = event.target.value; setEnter(data); }} />
-          <button onClick={(e) => {stakeNFT(e)}}>{loading ? "Loading ":"Stake"}</button>
+          <button onClick={(e) => { stakeNFT(e) }}>{loading ? "Loading " : "Stake"}</button>
         </form>
       );
     }
@@ -191,11 +205,11 @@ export default function Home() {
           <div>Staking decentralized application</div>
         </div>
         <div className={styles.bar}>
-          <div  className={styles.rewards}>Claimable Rewards</div>
+          <div className={styles.rewards}>Claimable Rewards</div>
         </div>
         <div className={styles.bar_label}>
           <div className={styles.rewards}>{rewardsToken}</div>
-          <button onClick={(e)=>{claimRewards(e)}} className={`${styles.staken} ${styles.claimrwrds}`}>{loading ? "Loading ...":"Claim Rewards"}</button>
+          <button onClick={(e) => { claimRewards(e) }} className={`${styles.staken} ${styles.claimrwrds}`}>{loading ? "Loading ..." : "Claim Rewards"}</button>
         </div>
         <div className={styles.stake}>
           {renderButton()}
@@ -208,7 +222,7 @@ export default function Home() {
               <div className={styles.card} key={keyi}>
                 <div className={styles.card_image}> <Image src={`https://ipfs.io/ipfs/${srcpath[2]}/${srcpath[3]}`} width={'270px'} height='180px' alt="nft image" /></div>
                 <div className={styles.card_title}></div>
-                <button onClick={(e)=>{withdraw(e)}} name={"nft#"+Math.round(parseFloat(stkn["tokenId"]) * (10 ** 18))}>{loading ? "Loading ...":"Withdraw"}</button>
+                <button onClick={(e) => { withdraw(e) }} name={"nft#" + Math.round(parseFloat(stkn["tokenId"]) * (10 ** 18))}>{loading ? "Loading ..." : "Withdraw"}</button>
               </div>
             )
           })}
