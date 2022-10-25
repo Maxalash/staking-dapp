@@ -35,6 +35,36 @@ button:active{
   -moz-box-shadow:    inset 2px 2px 20px black;
   box-shadow:         inset 2px 2px 20px black;
 }
+input[type=number]{
+  width: 50px;
+  height: 40px;
+  margin: 10px 0px 5px 0px;
+  padding: 0 10px;
+  border: none;
+  background-color: #69446f;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  color: white;
+}
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+input:focus{
+  outline: none;
+}
+input:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  width: 30%;
+  background: #fff;
+  border-top-left-radius: 50% 20%;
+  border-top-right-radius: 50% 20%;
+  user-select: none;
+}
+
 
 
 @media (prefers-color-scheme: dark) {
