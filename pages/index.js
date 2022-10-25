@@ -63,7 +63,8 @@ export default function Home() {
       const stakeContract = new Contract(STAKE_CONTRACT_ADDRESS, stake_abi, signer);
       const vintage = new Contract(NFT_ADDRESS, nft_abi, signer);
       const addr = await signer.getAddress();
-      const approved = vintage.isApprovedForAll(addr, STAKE_CONTRACT_ADDRESS);
+      const approved = await vintage.isApprovedForAll(addr, STAKE_CONTRACT_ADDRESS);
+      console.log(approved)
       if (approved) {
         const tx = await stakeContract.stake(enterId);
         setLoading(true);
